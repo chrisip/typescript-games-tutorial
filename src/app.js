@@ -4,14 +4,17 @@ var CANVAS_WIDTH = 1280;
 var CANVAS_HEIGHT = 720;
 var cCircle = /** @class */ (function () {
     function cCircle(x, y, radius, color, lineWidth) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (radius === void 0) { radius = 10; }
         if (color === void 0) { color = 'red'; }
         if (lineWidth === void 0) { lineWidth = 2; }
         var _this = this;
-        this.x = 0;
-        this.y = 0;
-        this.radius = 10;
-        this.lineWidth = 2;
-        this.color = 'red';
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.lineWidth = lineWidth;
         this.draw = function () {
             ctx.save();
             ctx.beginPath();
@@ -21,13 +24,35 @@ var cCircle = /** @class */ (function () {
             ctx.stroke();
             ctx.restore();
         };
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.color = color;
-        this.lineWidth = lineWidth;
     }
     return cCircle;
+}());
+var cRectangle = /** @class */ (function () {
+    function cRectangle(x, y, width, height, color, lineWidth) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (width === void 0) { width = 0; }
+        if (height === void 0) { height = 0; }
+        if (color === void 0) { color = 'blue'; }
+        if (lineWidth === void 0) { lineWidth = 2; }
+        var _this = this;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        this.lineWidth = lineWidth;
+        this.draw = function () {
+            ctx.save();
+            ctx.beginPath();
+            ctx.strokeStyle = _this.color;
+            ctx.lineWidth = _this.lineWidth;
+            ctx.rect(_this.x, _this.y, _this.width, _this.height);
+            ctx.stroke();
+            ctx.restore();
+        };
+    }
+    return cRectangle;
 }());
 var circle1 = new cCircle(200, 300, 50);
 var circle2 = new cCircle(400, 550, 150, 'blue', 5);

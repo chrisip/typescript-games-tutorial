@@ -13,18 +13,13 @@ interface iShape {
 }
 
 class cCircle implements iShape {
-  public x: number = 0;
-  public y: number = 0;
-  public radius: number = 10;
-  public lineWidth: number = 2;
-  public color: string = 'red';
-  constructor(x: number, y: number, radius: number, color: string = 'red', lineWidth: number = 2) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.color = color;
-    this.lineWidth = lineWidth;
-  }
+  constructor(
+      public x: number = 0,
+      public y: number = 0,
+      public radius: number = 10,
+      public color: string = 'red',
+      public lineWidth: number = 2,
+  ) {}
 
   public draw = (): void => {
     ctx.save();
@@ -32,6 +27,27 @@ class cCircle implements iShape {
     ctx.strokeStyle = this.color;
     ctx.lineWidth = this.lineWidth;
     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+class cRectangle implements iShape {
+  constructor(
+      public x: number = 0,
+      public y: number = 0,
+      public width: number = 0,
+      public height: number = 0,
+      public color: string = 'blue',
+      public lineWidth: number = 2,
+  ) {}
+
+  public draw = (): void => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.lineWidth;
+    ctx.rect(this.x, this.y, this.width, this.height);
     ctx.stroke();
     ctx.restore();
   }

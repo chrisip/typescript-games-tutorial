@@ -11,18 +11,23 @@ const gameLoop = () => {
   requestAnimationFrame(gameLoop);
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, Canvas.WIDTH, Canvas.HEIGHT);
-  if (circle1.x++ >= (Canvas.WIDTH + circle1.radius)) {
-    circle1.x = -circle1.radius;
-  }
-  if (circle2.y++ >= (Canvas.HEIGHT + circle2.radius)) {
-    circle2.y = -circle2.radius;
-  }
-  circle1.draw(ctx);
-  circle2.draw(ctx);
+  shapeList.forEach(shape => {
+    shape.draw(ctx);
+  });
 }
+
+const shapeList: Array<Shape.Shape> = new Array<Shape.Shape>();
 
 window.onload = () => {
   canvas = <HTMLCanvasElement>document.getElementById('cnvs');
+  shapeList.push(new Shape.Asteroid());
+  shapeList.push(new Shape.Asteroid());
+  shapeList.push(new Shape.Asteroid());
+  shapeList.push(new Shape.Asteroid());
+  shapeList.push(new Shape.Asteroid());
+  shapeList.push(new Shape.Circle(20, 50, 30));
+  shapeList.push(new Shape.Circle(120, 70, 50));
+  shapeList.push(new Shape.Rectangle(500, 500, 80, 60));
   ctx = canvas.getContext('2d');
   gameLoop();
 }

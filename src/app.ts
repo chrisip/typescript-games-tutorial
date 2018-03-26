@@ -1,6 +1,9 @@
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 
+const CANVAS_WIDTH = 1280;
+const CANVAS_HEIGHT = 720;
+
 interface iShape {
   draw(): void;
   x: number;
@@ -40,7 +43,13 @@ const circle2: cCircle = new cCircle(400, 550, 150, 'blue', 5);
 const gameLoop = () => {
   requestAnimationFrame(gameLoop);
   ctx.fillStyle = 'black';
-  ctx.fillRect(0, 0, 1280, 720);
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  if (circle1.x++ >= (CANVAS_WIDTH + circle1.radius)) {
+    circle1.x = -circle1.radius;
+  }
+  if (circle2.y++ >= (CANVAS_HEIGHT + circle2.radius)) {
+    circle2.y = -circle2.radius;
+  }
   circle1.draw();
   circle2.draw();
 }

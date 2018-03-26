@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
-    "sourceMap": true
+    "module": "system",
+    "sourceMap": true,
+    "outFile": "./dist/bundle.js",
+    "noImplicitAny": true
   }
 }

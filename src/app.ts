@@ -4,9 +4,6 @@ import * as Shape from './shape';
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 
-const circle1: Shape.Circle = new Shape.Circle(200, 300, 50);
-const circle2: Shape.Circle = new Shape.Circle(400, 550, 150, 'blue', 5);
-
 const gameLoop = () => {
   requestAnimationFrame(gameLoop);
   ctx.fillStyle = 'black';
@@ -18,22 +15,27 @@ const gameLoop = () => {
 
 const shapeList: Array<Shape.Shape> = new Array<Shape.Shape>();
 
+const asteroid: Shape.Asteroid = new Shape.Asteroid();
+asteroid.velocityX = 0;
+asteroid.velocityY = 0;
+
+
 const keyboardInput = (event: KeyboardEvent) => {
   // Press Left Arrow
   if (event.keyCode === 37) {
-    window.alert('Left Key Pressed');
+    asteroid.x -= 5;
   }
   // Press Up Arrow
   else if (event.keyCode === 38) {
-    window.alert('Up Key Pressed');
+    asteroid.y -= 5;
   }
   // Press Right Arrow
   else if (event.keyCode === 39) {
-    window.alert('Right Key Pressed');
+    asteroid.x += 5;
   }
   // Press Down Arrow
   else if (event.keyCode === 40) {
-    window.alert('Down Key Pressed');
+    asteroid.y -= 5;
   }
   // Press Space Bar
   else if (event.keyCode === 32) {
@@ -44,6 +46,7 @@ const keyboardInput = (event: KeyboardEvent) => {
 window.onload = () => {
   canvas = <HTMLCanvasElement>document.getElementById('cnvs');
   document.addEventListener('keydown', keyboardInput);
+  shapeList.push(asteroid);
   ctx = canvas.getContext('2d');
   gameLoop();
 }

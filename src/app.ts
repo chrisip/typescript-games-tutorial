@@ -21,21 +21,21 @@ asteroid.velocityY = 0;
 
 
 const keyboardInput = (event: KeyboardEvent) => {
-  // Press Left Arrow
-  if (event.keyCode === 37) {
+  // Press Left Arrow or 'A' Key
+  if (event.keyCode === 37 || event.keyCode === 65) {
     asteroid.x -= 5;
   }
-  // Press Up Arrow
-  else if (event.keyCode === 38) {
+  // Press Up Arrow or 'W' Key
+  else if (event.keyCode === 38 || event.keyCode === 87) {
     asteroid.y -= 5;
   }
-  // Press Right Arrow
-  else if (event.keyCode === 39) {
+  // Press Right Arrow or 'D' Key
+  else if (event.keyCode === 39 || event.keyCode === 68) {
     asteroid.x += 5;
   }
-  // Press Down Arrow
-  else if (event.keyCode === 40) {
-    asteroid.y -= 5;
+  // Press Down Arrow or 'S' Key
+  else if (event.keyCode === 40 || event.keyCode === 83) {
+    asteroid.y += 5;
   }
   // Press Space Bar
   else if (event.keyCode === 32) {

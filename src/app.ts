@@ -18,16 +18,32 @@ const gameLoop = () => {
 
 const shapeList: Array<Shape.Shape> = new Array<Shape.Shape>();
 
+const keyboardInput = (event: KeyboardEvent) => {
+  // Press Left Arrow
+  if (event.keyCode === 37) {
+    window.alert('Left Key Pressed');
+  }
+  // Press Up Arrow
+  else if (event.keyCode === 38) {
+    window.alert('Up Key Pressed');
+  }
+  // Press Right Arrow
+  else if (event.keyCode === 39) {
+    window.alert('Right Key Pressed');
+  }
+  // Press Down Arrow
+  else if (event.keyCode === 40) {
+    window.alert('Down Key Pressed');
+  }
+  // Press Space Bar
+  else if (event.keyCode === 32) {
+    window.alert('Space Key Pressed');
+  }
+}
+
 window.onload = () => {
   canvas = <HTMLCanvasElement>document.getElementById('cnvs');
-  shapeList.push(new Shape.Asteroid());
-  shapeList.push(new Shape.Asteroid());
-  shapeList.push(new Shape.Asteroid());
-  shapeList.push(new Shape.Asteroid());
-  shapeList.push(new Shape.Asteroid());
-  shapeList.push(new Shape.Circle(20, 50, 30));
-  shapeList.push(new Shape.Circle(120, 70, 50));
-  shapeList.push(new Shape.Rectangle(500, 500, 80, 60));
+  document.addEventListener('keydown', keyboardInput);
   ctx = canvas.getContext('2d');
   gameLoop();
 }

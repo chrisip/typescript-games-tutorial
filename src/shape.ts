@@ -126,12 +126,14 @@ export class Asteroid implements Shape {
     this.y += this.velocityY;
     if (this.x < -this.size * 2) {
       this.x = Canvas.WIDTH + this.size * 2;
-    } else if (this.x > Canvas.WIDTH + this.size * 2) {
+    }
+    else if (this.x > Canvas.WIDTH + this.size * 2) {
       this.x = -2 * this.size;
     }
     if (this.y < -this.size * 2) {
       this.y = Canvas.HEIGHT + this.size * 2;
-    } else if (this.y > Canvas.HEIGHT + this.size * 2) {
+    }
+    else if (this.y > Canvas.HEIGHT + this.size * 2) {
       this.y = -2 * this.size;
     }
     this.rotation += this.rotationSpeed;

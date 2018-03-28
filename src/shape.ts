@@ -152,3 +152,63 @@ export class Asteroid implements Shape {
     ctx.restore();
   }
 }
+
+class Vector {
+  constructor(
+      public x: number = 0,
+      public y: number = 0,
+  ) {}
+
+  get magnitude(): number {
+    return Math.sqrt(this.magnituedSquared);
+  }
+
+  get magnituedSquared(): number {
+    return this.x * this.x + this.y * this.y;
+  }
+
+  public normalize = (): Vector => {
+    const magnitude: number = this.magnitude;
+    this.x /= magnitude;
+    this.y /= magnitude;
+    return this;
+  }
+
+  public zero = (): void => {
+    this.x = 0;
+    this.y = 0;
+  }
+
+  public copy = (vector: Vector): void => {
+    this.x = vector.x;
+    this.y = vector.y;
+  }
+
+  public rotate = (radians: number): void => {
+    const cos: number = Math.cos(radians);
+    const sin: number = Math.sin(radians);
+    const x: number = (cos * this.x) + (sin * this.y);
+    const y: number = (cos * this.y) - (sin * this.x);
+    this.x = x;
+    this.y = y;
+  }
+
+  public getAngle = (): number => {
+    return Math.atan2(this.y, this.x);
+  }
+
+  public multiply = (value: number): void => {
+    this.x *= value;
+    this.y *= value;
+  }
+
+  public add = (vector: Vector): void => {
+    this.x += vector.x;
+    this.y += vector.y;
+  }
+
+  public subtract = (vector: Vector): void => {
+    this.x -= vector.x;
+    this.y -= vector.y;
+  }
+}

@@ -1,5 +1,6 @@
 import * as Canvas from './canvas';
 import * as Shape from './shape';
+import * as Stat from './stat';
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
@@ -11,6 +12,7 @@ const gameLoop = () => {
   shapeList.forEach(shape => {
     shape.draw(ctx);
   });
+  reporter.draw();
 }
 
 const shapeList: Array<Shape.Shape> = new Array<Shape.Shape>();
@@ -20,6 +22,8 @@ asteroid.velocityX = 0;
 asteroid.velocityY = 0;
 
 const spaceship: Shape.Spaceship = new Shape.Spaceship(200, 450, 5);
+
+let reporter: Stat.Reporter;
 
 const keyboardInput = (event: KeyboardEvent) => {
   // Press Left Arrow or 'A' Key
@@ -48,6 +52,7 @@ window.onload = () => {
   canvas = <HTMLCanvasElement>document.getElementById('cnvs');
   document.addEventListener('keydown', keyboardInput);
   shapeList.push(spaceship);
+  reporter =  new Stat.Reporter('stats', spaceship);
   ctx = canvas.getContext('2d');
   gameLoop();
 }

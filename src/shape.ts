@@ -68,7 +68,7 @@ export class Asteroid implements Shape {
       public y: number = undefined,
       public size?: number,
       public color: string = 'white',
-      public lineWidth: number =2,
+      public lineWidth: number = 2,
   ) {
     if (!x) {
       this.x = Math.round(Math.random() * Canvas.WIDTH);
@@ -160,10 +160,10 @@ class Vector {
   ) {}
 
   get magnitude(): number {
-    return Math.sqrt(this.magnituedSquared);
+    return Math.sqrt(this.magnitudeSquared);
   }
 
-  get magnituedSquared(): number {
+  get magnitudeSquared(): number {
     return this.x * this.x + this.y * this.y;
   }
 
@@ -210,5 +210,107 @@ class Vector {
   public subtract = (vector: Vector): void => {
     this.x -= vector.x;
     this.y -= vector.y;
+  }
+}
+
+class Spaceship implements Shape {
+  public velocity: Vector = new Vector(0, 0);
+  public orientation: Vector = new Vector(1, 0);
+  private _maxSpeed: number = 10;
+  public maxSpeedSquared: number = this._maxSpeed * this._maxSpeed;
+  public acceleration: number = 0.2;
+  public rotation: number = 0;
+  public pointList: Array<Vector> = new Array<Vector>();
+  private _tempPoint: Vector = new Vector(0, 0);
+
+  constructor(
+      public x: number,
+      public y: number,
+      public size: number,
+      public color: string = 'white',
+      public lineWidth: number = 2,
+  ) {
+    this.pointList.push(new Vector(3 * this.size, 0));
+    this.pointList.push(new Vector(-2 * this.size, -2 * this.size));
+    this.pointList.push(new Vector(-1 * this.size, 0));
+    this.pointList.push(new Vector(-2 * this.size, 2 * this.size));
+  }
+
+  get maxSpeed(): number {
+    return Math.sqrt(this.maxSpeedSquared);
+  }
+
+  set maxSpeed(value: number) {
+    this._maxSpeed = value;
+    this.maxSpeedSquared = value * value;
+  }
+
+  public accelerate(): void {
+    if (this.velocity.x === 0 && this.velocity.y === 0) {
+      this.velocity.copy(this.orientation);
+      this.velocity.multiply(this.acceleration);
+    }
+    this._tempPoint.copy(this.orientation);
+    this._tempPoint.multiply(this.acceleration);
+    this.velocity.add(this._tempPoint);
+    if (this.velocity.magnitudeSquared >= this.maxSpeedSquared) {
+      this.velocity.multiply(this.maxSpeed / this.velocity.magnitude);
+    }
+  }
+
+  public decelerate(): void {
+    this.velocity.multiply(0.9);
+    if (this.velocity.magnitudeSquared < 1) {
+      this.velocity.x = 0;
+      this.velocity.y = 0;
+    }
+  }
+
+  public draw = (ctx: CanvasRenderingContext2D): void => {
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    if (this.x < -this.size * 2) {
+      this.x = Canvas.WIDTH + this.size * 2;
+    }
+    else if (this.x > Canvas.WIDTH + this.size * 2) {
+      this.x = -2 * this.size;
+    }
+    if (this.y < -this.size * 2) {
+      this.y = Canvas.HEIGHT + this.size * 2;
+    }
+    else if (this.y > Canvas.HEIGHT + this.size * 2) {
+      this.y = -2 * this.size;
+    }
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    ctx.beginPath();
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.lineWidth;
+    ctx.moveTo(this.pointList[this.pointList.length - 1].x, this.pointList[this.pointList.length - 1].y);
+    for (let i: number = 0; i < this.pointList.length; i++) {
+      ctx.lineTo(this.pointList[i].x, this.pointList[i].y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  public turnLeft = (): void => {
+    this.rotation -= 0.1;
+    if (this.rotation < 0) {
+      this.rotation += Math.PI * 2;
+    }
+    this.orientation.x = 1;
+    this.orientation.y = 0;
+    this.orientation.rotate(-this.rotation);
+  }
+
+  public turnRight = (): void => {
+    this.rotation += 0.1;
+    this.rotation %= Math.PI * 2;
+    this.orientation.x = 1;
+    this.orientation.y = 0;
+    this.orientation.rotate(-this.rotation);
   }
 }

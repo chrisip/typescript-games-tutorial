@@ -19,23 +19,24 @@ const asteroid: Shape.Asteroid = new Shape.Asteroid();
 asteroid.velocityX = 0;
 asteroid.velocityY = 0;
 
+const spaceship: Shape.Spaceship = new Shape.Spaceship(200, 450, 5);
 
 const keyboardInput = (event: KeyboardEvent) => {
   // Press Left Arrow or 'A' Key
   if (event.keyCode === 37 || event.keyCode === 65) {
-    asteroid.x -= 5;
+    spaceship.turnLeft();
   }
   // Press Up Arrow or 'W' Key
   else if (event.keyCode === 38 || event.keyCode === 87) {
-    asteroid.y -= 5;
+    spaceship.accelerate();
   }
   // Press Right Arrow or 'D' Key
   else if (event.keyCode === 39 || event.keyCode === 68) {
-    asteroid.x += 5;
+    spaceship.turnRight();
   }
   // Press Down Arrow or 'S' Key
   else if (event.keyCode === 40 || event.keyCode === 83) {
-    asteroid.y += 5;
+    spaceship.decelerate();
   }
   // Press Space Bar
   else if (event.keyCode === 32) {
@@ -46,7 +47,7 @@ const keyboardInput = (event: KeyboardEvent) => {
 window.onload = () => {
   canvas = <HTMLCanvasElement>document.getElementById('cnvs');
   document.addEventListener('keydown', keyboardInput);
-  shapeList.push(asteroid);
+  shapeList.push(spaceship);
   ctx = canvas.getContext('2d');
   gameLoop();
 }

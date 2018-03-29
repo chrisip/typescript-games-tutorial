@@ -213,7 +213,7 @@ class Vector {
   }
 }
 
-class Spaceship implements Shape {
+export class Spaceship implements Shape {
   public velocity: Vector = new Vector(0, 0);
   public orientation: Vector = new Vector(1, 0);
   private _maxSpeed: number = 10;

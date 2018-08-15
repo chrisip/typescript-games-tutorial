@@ -26,6 +26,6 @@ export class Reporter {
   }
 
   public serializeVector = (vector: Shape.Vector) => {
-    return `x: ${vector.x}, y: ${vector.y}, magnitude: ${vector.magnitude}, angle: ${vector.getAngle()}`;
+    return `x: ${vector.x}, y: ${vector.y}, magnitude: ${vector.magnitude}, angle: ${vector.angle}`;
   }
 }

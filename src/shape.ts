@@ -159,11 +159,11 @@ export class Vector {
       public y: number = 0,
   ) {}
 
-  get magnitude(): number {
+  public get magnitude(): number {
     return Math.sqrt(this.magnitudeSquared);
   }
 
-  get magnitudeSquared(): number {
+  public get magnitudeSquared(): number {
     return this.x * this.x + this.y * this.y;
   }
 
@@ -193,7 +193,7 @@ export class Vector {
     this.y = y;
   }
 
-  public getAngle = (): number => {
+  public get angle(): number {
     return Math.atan2(this.y, this.x);
   }
 

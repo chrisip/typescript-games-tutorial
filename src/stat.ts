@@ -10,8 +10,8 @@ export class Reporter {
 
   public draw = (): void => {
     const rows: string[] = [];
-    rows.push(`<tr><td>x</td><td>${this.spaceship.x}</td></tr>`);
-    rows.push(`<tr><td>y</td><td>${this.spaceship.y}</td></tr>`);
+    rows.push(`<tr><td>x</td><td>${this.spaceship.x.toFixed(4)}</td></tr>`);
+    rows.push(`<tr><td>y</td><td>${this.spaceship.y.toFixed(4)}</td></tr>`);
     rows.push(`<tr><td>size</td><td>${this.spaceship.size}</td></tr>`);
     rows.push(`<tr><td>color</td><td>${this.spaceship.color}</td></tr>`);
     rows.push(`<tr><td>lineWidth</td><td>${this.spaceship.lineWidth}</td></tr>`);
@@ -20,12 +20,13 @@ export class Reporter {
     rows.push(`<tr><td>maxSpeed</td><td>${this.spaceship.maxSpeed}</td></tr>`);
     rows.push(`<tr><td>maxSpeedSquared</td><td>${this.spaceship.maxSpeedSquared}</td></tr>`);
     rows.push(`<tr><td>acceleration</td><td>${this.spaceship.acceleration}</td></tr>`);
-    rows.push(`<tr><td>rotation</td><td>${this.spaceship.rotation}</td></tr>`);
-    rows.push(`<tr><td>pointList</td><td>${this.spaceship.pointList}</td></tr>`);
+    rows.push(`<tr><td>rotation</td><td>${this.spaceship.rotation.toFixed(4)}</td></tr>`);
+    const pointListSerialized = this.spaceship.pointList.map((vector, i) => `${i}) ${this.serializeVector(vector)}`).join(' ');
+    rows.push(`<tr><td>pointList</td><td>${pointListSerialized}</td></tr>`);
     this.tableElem.find('tbody').html(rows.join(''));
   }
 
   public serializeVector = (vector: Shape.Vector) => {
-    return `x: ${vector.x}, y: ${vector.y}, magnitude: ${vector.magnitude}, angle: ${vector.angle}`;
+    return `x: ${vector.x.toFixed(4)}, y: ${vector.y.toFixed(4)}, magnitude: ${vector.magnitude.toFixed(4)}, angle: ${vector.angle.toFixed(4)}`;
   }
 }

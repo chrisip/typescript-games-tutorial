@@ -306,11 +306,62 @@ export class Spaceship implements Shape {
     this.orientation.rotate(-this.rotation);
   }
 
-  public turnRight = (): void => {
+  public turnRight(): void {
     this.rotation += 0.1;
     this.rotation %= Math.PI * 2;
     this.orientation.x = 1;
     this.orientation.y = 0;
     this.orientation.rotate(-this.rotation);
+  }
+}
+
+export class Bullet implements Shape {
+  public active: boolean = true;
+  public lineWidthAnimVal: number = 0;
+  public widthUp: boolean = true;
+  public velocity: Vector = new Vector();
+  public speed: number = 5;
+
+  public constructor(
+    public x: number,
+    public y: number,
+    public size: number,
+    public color: string = 'red',
+    public lineWidth: number = 5,
+  ) {}
+
+  public launch(orientation: Vector): void {
+    this.velocity.copy(orientation);
+    this.velocity.multiply(this.speed);
+  }
+
+  public draw(ctx: CanvasRenderingContext2D): void {
+    if (this.active === false) {
+      return;
+    }
+    if (this.widthUp === true) {
+      this.lineWidthAnimVal += 0.1;
+      if (this.lineWidthAnimVal >= 2) {
+        this.widthUp = false;
+      }
+    }
+    else {
+      this.lineWidthAnimVal -= 0.1;
+      if (this.lineWidthAnimVal <= -2) {
+        this.widthUp = true;
+      }
+    }
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    if (this.x < -10 || this.x > (Canvas.WIDTH + 10) || this.y < -10 || this.y > (Canvas.HEIGHT + 10)) {
+      this.active = false;
+    }
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.lineWidth + this.lineWidthAnimVal;
+    ctx.rect(this.x, thix.y, this.size, this.size);
+    ctx.stroke();
+    ctx.restore();
   }
 }

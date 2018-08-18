@@ -360,7 +360,7 @@ export class Bullet implements Shape {
     ctx.beginPath();
     ctx.strokeStyle = this.color;
     ctx.lineWidth = this.lineWidth + this.lineWidthAnimVal;
-    ctx.rect(this.x, thix.y, this.size, this.size);
+    ctx.rect(this.x, this.y, this.size, this.size);
     ctx.stroke();
     ctx.restore();
   }

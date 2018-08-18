@@ -12,10 +12,14 @@ const gameLoop = () => {
   shapeList.forEach(shape => {
     shape.draw(ctx);
   });
+  bulletList.forEach(bullet => {
+    bullet.draw(ctx);
+  })
   reporter.draw();
 }
 
 const shapeList: Array<Shape.Shape> = new Array<Shape.Shape>();
+const bulletList: Array<Shape.Bullet> = new Array<Shape.Bullet>();
 
 const asteroid: Shape.Asteroid = new Shape.Asteroid();
 asteroid.velocityX = 0;
@@ -44,7 +48,24 @@ const keyboardInput = (event: KeyboardEvent) => {
   }
   // Press Space Bar
   else if (event.keyCode === 32) {
-    window.alert('Space Key Pressed');
+    event.preventDefault();
+    let bullet: Shape.Bullet|null = null;
+    bulletList.some(existingBullet => {
+      if (!existingBullet.active) {
+        bullet = existingBullet;
+        return true;
+      }
+    });
+    if (!bullet || bullet.active) {
+      bullet = new Shape.Bullet(spaceship.x, spaceship.y, 3);
+      bulletList.push(bullet);
+    }
+    else {
+      bullet.x = spaceship.x;
+      bullet.y = spaceship.y;
+      bullet.active = true;
+    }
+    bullet.launch(spaceship.orientation);
   }
 }
 

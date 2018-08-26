@@ -2,6 +2,18 @@ type Callback = () => void;
 
 type KeyCode = number;
 
+export enum Key {
+  Up = 38,
+  Down = 40,
+  Left = 37,
+  Right = 39,
+  A = 65,
+  D = 68,
+  S = 83,
+  W = 87,
+  Space = 32,
+}
+
 export class Keyboard {
   public keyCallback: Map<KeyCode, Callback> = new Map<KeyCode, Callback>();
   public keyDown: Map<KeyCode, boolean> = new Map<KeyCode, boolean>();

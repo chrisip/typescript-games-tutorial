@@ -222,6 +222,7 @@ export class Spaceship implements Shape {
   public rotation: number = 0;
   public pointList: Array<Vector> = new Array<Vector>();
   private _tempPoint: Vector = new Vector(0, 0);
+  public bulletList: Array<Bullet> = new Array<Bullet>();
 
   constructor(
       public x: number,
@@ -312,6 +313,26 @@ export class Spaceship implements Shape {
     this.orientation.x = 1;
     this.orientation.y = 0;
     this.orientation.rotate(-this.rotation);
+  }
+
+  public shoot(): void {
+    let bullet: Bullet|null = null;
+    this.bulletList.some(existingBullet => {
+      if (!existingBullet.active) {
+        bullet = existingBullet;
+        return true;
+      }
+    });
+    if (!bullet || bullet.active) {
+      bullet = new Bullet(this.x, this.y, 3);
+      this.bulletList.push(bullet);
+    }
+    else {
+      bullet.x = this.x;
+      bullet.y = this.y;
+      bullet.active = true;
+    }
+    bullet.launch(this.orientation);
   }
 }
 

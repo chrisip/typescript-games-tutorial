@@ -184,6 +184,10 @@ export class Vector {
     this.y = vector.y;
   }
 
+  public duplicate = (): Vector => {
+    return new Vector(this.x, this.y);
+  }
+
   public rotate = (radians: number): void => {
     const cos: number = Math.cos(radians);
     const sin: number = Math.sin(radians);

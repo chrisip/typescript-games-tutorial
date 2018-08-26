@@ -7,13 +7,16 @@ let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 
 let reporter: Stat.Reporter;
+const keyboardInput: Input.Keyboard = new Input.Keyboard();;
 const shapeList: Array<Shape.Shape> = new Array<Shape.Shape>();
 const spaceship: Shape.Spaceship = new Shape.Spaceship(200, 450, 5);
-const keyboardInput: Input.Keyboard = new Input.Keyboard();;
 
 window.onload = () => {
   canvas = <HTMLCanvasElement>document.getElementById('cnvs');
   shapeList.push(spaceship);
+  shapeList.push(new Shape.Asteroid());
+  shapeList.push(new Shape.Asteroid());
+  shapeList.push(new Shape.Asteroid());
   keyboardInput.addKeyCodeCallback(Input.Key.Left, spaceship.turnLeft);
   keyboardInput.addKeyCodeCallback(Input.Key.A, spaceship.turnLeft);
   keyboardInput.addKeyCodeCallback(Input.Key.Up, spaceship.accelerate);

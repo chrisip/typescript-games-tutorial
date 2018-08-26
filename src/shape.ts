@@ -17,7 +17,7 @@ export class Circle implements Shape {
       public lineWidth: number = 2,
   ) {}
 
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw = (ctx: CanvasRenderingContext2D): void => {
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = this.color;
@@ -38,7 +38,7 @@ export class Rectangle implements Shape {
       public lineWidth: number = 2,
   ) {}
 
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw = (ctx: CanvasRenderingContext2D): void => {
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = this.color;
@@ -121,7 +121,7 @@ export class Asteroid implements Shape {
     yRand = Math.round(Math.random() * this.size - this.size / 2);
   }
 
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw = (ctx: CanvasRenderingContext2D): void => {
     this.x += this.velocityX;
     this.y += this.velocityY;
     if (this.x < -this.size * 2) {
@@ -167,24 +167,24 @@ export class Vector {
     return this.x * this.x + this.y * this.y;
   }
 
-  public normalize(): Vector {
+  public normalize = (): Vector => {
     const magnitude: number = this.magnitude;
     this.x /= magnitude;
     this.y /= magnitude;
     return this;
   }
 
-  public zero(): void {
+  public zero = (): void => {
     this.x = 0;
     this.y = 0;
   }
 
-  public copy(vector: Vector): void {
+  public copy = (vector: Vector): void => {
     this.x = vector.x;
     this.y = vector.y;
   }
 
-  public rotate(radians: number): void {
+  public rotate = (radians: number): void => {
     const cos: number = Math.cos(radians);
     const sin: number = Math.sin(radians);
     const x: number = (cos * this.x) + (sin * this.y);
@@ -197,17 +197,17 @@ export class Vector {
     return Math.atan2(this.y, this.x);
   }
 
-  public multiply(value: number): void {
+  public multiply = (value: number): void => {
     this.x *= value;
     this.y *= value;
   }
 
-  public add(vector: Vector): void {
+  public add = (vector: Vector): void => {
     this.x += vector.x;
     this.y += vector.y;
   }
 
-  public subtract(vector: Vector): void {
+  public subtract = (vector: Vector): void => {
     this.x -= vector.x;
     this.y -= vector.y;
   }
@@ -246,7 +246,7 @@ export class Spaceship implements Shape {
     this.maxSpeedSquared = value * value;
   }
 
-  public accelerate(): void {
+  public accelerate = (): void => {
     if (this.velocity.x === 0 && this.velocity.y === 0) {
       this.velocity.copy(this.orientation);
       this.velocity.multiply(this.acceleration);
@@ -259,7 +259,7 @@ export class Spaceship implements Shape {
     }
   }
 
-  public decelerate(): void {
+  public decelerate = (): void => {
     this.velocity.multiply(0.9);
     if (this.velocity.magnitudeSquared < 1) {
       this.velocity.x = 0;
@@ -267,7 +267,7 @@ export class Spaceship implements Shape {
     }
   }
 
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw = (ctx: CanvasRenderingContext2D): void => {
     this.x += this.velocity.x;
     this.y += this.velocity.y;
     if (this.x < -this.size * 2) {
@@ -297,7 +297,7 @@ export class Spaceship implements Shape {
     ctx.restore();
   }
 
-  public turnLeft(): void {
+  public turnLeft = (): void => {
     this.rotation -= 0.1;
     if (this.rotation < 0) {
       this.rotation += Math.PI * 2;
@@ -307,7 +307,7 @@ export class Spaceship implements Shape {
     this.orientation.rotate(-this.rotation);
   }
 
-  public turnRight(): void {
+  public turnRight = (): void => {
     this.rotation += 0.1;
     this.rotation %= Math.PI * 2;
     this.orientation.x = 1;
@@ -315,7 +315,7 @@ export class Spaceship implements Shape {
     this.orientation.rotate(-this.rotation);
   }
 
-  public shoot(): void {
+  public shoot = (): void => {
     let bullet: Bullet|null = null;
     this.bulletList.some(existingBullet => {
       if (!existingBullet.active) {
@@ -351,12 +351,12 @@ export class Bullet implements Shape {
     public lineWidth: number = 5,
   ) {}
 
-  public launch(orientation: Vector): void {
+  public launch = (orientation: Vector): void => {
     this.velocity.copy(orientation);
     this.velocity.multiply(this.speed);
   }
 
-  public draw(ctx: CanvasRenderingContext2D): void {
+  public draw = (ctx: CanvasRenderingContext2D): void => {
     if (this.active === false) {
       return;
     }

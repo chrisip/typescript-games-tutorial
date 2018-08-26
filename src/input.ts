@@ -24,21 +24,21 @@ export class Keyboard {
     document.addEventListener('keyup', this.keyboardUp);
   }
 
-  public keyboardDown(event: KeyboardEvent): void {
+  public keyboardDown = (event: KeyboardEvent): void => {
     event.preventDefault();
     this.keyDown.set(event.keyCode, true);
   }
 
-  public keyboardUp(event: KeyboardEvent): void {
+  public keyboardUp = (event: KeyboardEvent): void => {
     this.keyDown.set(event.keyCode, false);
   }
 
-  public addKeyCodeCallback(keyCode: number, f: Callback): void {
+  public addKeyCodeCallback = (keyCode: number, f: Callback): void => {
     this.keyCallback.set(keyCode, f);
     this.keyDown.set(keyCode, false);
   }
 
-  public inputLoop(): void {
+  public inputLoop = (): void => {
     this.keyDown.forEach((isDown, keyCode) => {
       if (isDown) {
         const callback = this.keyCallback.get(keyCode);

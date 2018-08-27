@@ -16,6 +16,8 @@ class Game {
   private circle2: Collision.CircleCollider;
   private rectangle1: Collision.RectangleCollider;
   private rectangle2: Collision.RectangleCollider;
+  private line1: Collision.LineCollider;
+  private line2: Collision.LineCollider;
 
   constructor() {
     this.keyboardInput = new Input.Keyboard();
@@ -27,6 +29,8 @@ class Game {
     this.circle2 = new Collision.CircleCollider();
     this.rectangle1 = new Collision.RectangleCollider();
     this.rectangle2 = new Collision.RectangleCollider();
+    this.line1 = new Collision.LineCollider();
+    this.line2 = new Collision.LineCollider();
     this.keyboardInput.addKeyCodeCallback(Input.Key.Left, this.spaceship.turnLeft);
     this.keyboardInput.addKeyCodeCallback(Input.Key.A, this.spaceship.turnLeft);
     this.keyboardInput.addKeyCodeCallback(Input.Key.Up, this.spaceship.accelerate);
@@ -41,6 +45,7 @@ class Game {
       this.spaceship.shoot();
       this.resetCircles();
       this.resetRectangles();
+      this.resetLines();
     });
     this.shapeList.push(this.spaceship);
     this.shapeList.push(new Shape.Asteroid());
@@ -68,6 +73,7 @@ class Game {
     // TODO: Remove this after finishing testing collisions
     this.drawCircles();
     this.drawRectangles();
+    this.drawLines();
     this.reporter.draw();
   }
 
@@ -133,6 +139,41 @@ class Game {
       this.rectangle2.position.y = Math.floor(Math.random() * Canvas.HEIGHT);
       this.rectangle2.dimension.x = 100 + Math.floor(Math.random() * Canvas.WIDTH / 2);
       this.rectangle2.dimension.y = 100 + Math.floor(Math.random() * Canvas.HEIGHT / 2);
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public drawLine = (startX: number, startY: number, endX: number, endY: number, color: string, lineWidth: number): void => {
+      this.ctx.save();
+      this.ctx.beginPath();
+      this.ctx.strokeStyle = color;
+      this.ctx.lineWidth = lineWidth;
+      this.ctx.moveTo(startX, startY);
+      this.ctx.lineTo(endX, endY);
+      this.ctx.closePath();
+      this.ctx.stroke();
+      this.ctx.restore();
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public drawLines = (): void => {
+      let color = 'blue';
+      if (Collision.Collision.LineLine(this.line1, this.line2)) {
+        color = 'red';
+      }
+      this.drawLine(this.line1.position.x, this.line1.position.y, this.line1.endPosition.x, this.line1.endPosition.y, color, 3);
+      this.drawLine(this.line2.position.x, this.line2.position.y, this.line2.endPosition.x, this.line2.endPosition.y, color, 3);
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public resetLines = (): void => {
+      this.line1.position.x = Math.floor(Math.random() * Canvas.WIDTH);
+      this.line1.position.y = Math.floor(Math.random() * Canvas.HEIGHT);
+      this.line1.endPosition.x = Math.floor(Math.random() * Canvas.WIDTH);
+      this.line1.endPosition.y = Math.floor(Math.random() * Canvas.HEIGHT);
+      this.line2.position.x = Math.floor(Math.random() * Canvas.WIDTH);
+      this.line2.position.y = Math.floor(Math.random() * Canvas.HEIGHT);
+      this.line2.endPosition.x = Math.floor(Math.random() * Canvas.WIDTH);
+      this.line2.endPosition.y = Math.floor(Math.random() * Canvas.HEIGHT);
     }
 }
 

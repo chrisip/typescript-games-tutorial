@@ -197,6 +197,13 @@ export class Vector {
     this.y = y;
   }
 
+  public rotate90 = (): void => {
+    const x: number = -this.y;
+    const y: number = this.x;
+    this.x = x;
+    this.y = y;
+  }
+
   public get angle(): number {
     return Math.atan2(this.y, this.x);
   }
@@ -214,6 +221,10 @@ export class Vector {
   public subtract = (vector: Vector): void => {
     this.x -= vector.x;
     this.y -= vector.y;
+  }
+
+  public dot = (vector: Vector): number => {
+    return this.x * vector.x + this.y * vector.y;
   }
 }
 

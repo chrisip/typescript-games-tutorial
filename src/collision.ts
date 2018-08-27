@@ -33,6 +33,12 @@ export class RectangleCollider implements Collider {
   }
 }
 
+export class LineCollider implements Collider {
+  public colliderType: ColliderType = ColliderType.Line;
+  public position: Shape.Vector = new Shape.Vector();
+  public endPosition: Shape.Vector = new Shape.Vector(1, 1);
+}
+
 export class Collision {
   public static CircleCircle(a: CircleCollider, b: CircleCollider): boolean {
     const tempVector: Shape.Vector = a.position.duplicate();
@@ -80,5 +86,39 @@ export class Collision {
       return true;
     }
     return false;
+  }
+
+  public static LineLine(a: LineCollider, b: LineCollider): boolean {
+    let directionA: Shape.Vector = a.endPosition.duplicate();
+    let directionB: Shape.Vector = b.endPosition.duplicate();
+    directionA.subtract(a.position);
+    if (directionA.x === 0 && directionA.y === 0) {
+      // This is not a line, this is a point. Don't bother checking
+      return false;
+    }
+    let distancePoint1: Shape.Vector = a.position.duplicate();
+    let distancePoint2: Shape.Vector = a.position.duplicate();
+    distancePoint1.subtract(b.position);
+    distancePoint2.subtract(b.endPosition);
+    let rotatedDirection: Shape.Vector = directionA.duplicate();
+    rotatedDirection.rotate90();
+    if (rotatedDirection.dot(distancePoint1) * rotatedDirection.dot(distancePoint2) > 0) {
+      return false;
+    }
+    directionB.subtract(b.position);
+    if (directionB.x === 0 && directionB.y === 0) {
+      // This is not a line, this is a point. Don't bother checking
+      return false;
+    }
+    distancePoint1.copy(b.position);
+    distancePoint2.copy(b.position);
+    distancePoint1.subtract(a.position);
+    distancePoint2.subtract(a.endPosition);
+    rotatedDirection.copy(directionB);
+    rotatedDirection.rotate90();
+    if (rotatedDirection.dot(distancePoint1) * rotatedDirection.dot(distancePoint2) > 0) {
+      return false;
+    }
+    return true;
   }
 }

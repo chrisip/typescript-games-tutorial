@@ -14,6 +14,8 @@ class Game {
   // TODO: Remove this after finishing testing collisions
   private circle1: Collision.CircleCollider;
   private circle2: Collision.CircleCollider;
+  private rectangle1: Collision.RectangleCollider;
+  private rectangle2: Collision.RectangleCollider;
 
   constructor() {
     this.keyboardInput = new Input.Keyboard();
@@ -23,6 +25,8 @@ class Game {
     // TODO: Remove this after finishing testing collisions
     this.circle1 = new Collision.CircleCollider();
     this.circle2 = new Collision.CircleCollider();
+    this.rectangle1 = new Collision.RectangleCollider();
+    this.rectangle2 = new Collision.RectangleCollider();
     this.keyboardInput.addKeyCodeCallback(Input.Key.Left, this.spaceship.turnLeft);
     this.keyboardInput.addKeyCodeCallback(Input.Key.A, this.spaceship.turnLeft);
     this.keyboardInput.addKeyCodeCallback(Input.Key.Up, this.spaceship.accelerate);
@@ -33,7 +37,11 @@ class Game {
     this.keyboardInput.addKeyCodeCallback(Input.Key.S, this.spaceship.decelerate);
     // TODO: Remove this after finishing testing collisions
     // this.keyboardInput.addKeyCodeCallback(Input.Key.Space, this.spaceship.shoot);
-    this.keyboardInput.addKeyCodeCallback(Input.Key.Space, this.resetCircles);
+    this.keyboardInput.addKeyCodeCallback(Input.Key.Space, () => {
+      this.spaceship.shoot();
+      this.resetCircles();
+      this.resetRectangles();
+    });
     this.shapeList.push(this.spaceship);
     this.shapeList.push(new Shape.Asteroid());
     this.shapeList.push(new Shape.Asteroid());
@@ -59,6 +67,7 @@ class Game {
     })
     // TODO: Remove this after finishing testing collisions
     this.drawCircles();
+    this.drawRectangles();
     this.reporter.draw();
   }
 
@@ -91,6 +100,39 @@ class Game {
       this.circle2.radius = Math.floor(Math.random() * 400);
       this.circle2.position.x = this.circle2.radius / 2 + Math.floor(Math.random() * (Canvas.WIDTH - this.circle2.radius / 2));
       this.circle2.position.y = this.circle2.radius / 2 + Math.floor(Math.random() * (Canvas.HEIGHT - this.circle2.radius / 2));
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public drawRectangle = (x: number, y: number, width: number, height: number, color: string, lineWidth: number = 5): void => {
+      this.ctx.save();
+      this.ctx.beginPath();
+      this.ctx.strokeStyle = color;
+      this.ctx.lineWidth = lineWidth;
+      this.ctx.rect(x, y, width, height);
+      this.ctx.stroke();
+      this.ctx.restore();
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public drawRectangles = (): void => {
+      let color = 'blue';
+      if (Collision.Collision.RectangleRectangle(this.rectangle1, this.rectangle2)) {
+        color = 'red';
+      }
+      this.drawRectangle(this.rectangle1.position.x, this.rectangle1.position.y, this.rectangle1.dimension.x, this.rectangle1.dimension.y, color);
+      this.drawRectangle(this.rectangle2.position.x, this.rectangle2.position.y, this.rectangle2.dimension.x, this.rectangle2.dimension.y, color);
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public resetRectangles = (): void => {
+      this.rectangle1.position.x = Math.floor(Math.random() * Canvas.WIDTH);
+      this.rectangle1.position.y = Math.floor(Math.random() * Canvas.HEIGHT);
+      this.rectangle1.dimension.x = 100 + Math.floor(Math.random() * Canvas.WIDTH / 2);
+      this.rectangle1.dimension.y = 100 + Math.floor(Math.random() * Canvas.HEIGHT / 2);
+      this.rectangle2.position.x = Math.floor(Math.random() * Canvas.WIDTH);
+      this.rectangle2.position.y = Math.floor(Math.random() * Canvas.HEIGHT);
+      this.rectangle2.dimension.x = 100 + Math.floor(Math.random() * Canvas.WIDTH / 2);
+      this.rectangle2.dimension.y = 100 + Math.floor(Math.random() * Canvas.HEIGHT / 2);
     }
 }
 

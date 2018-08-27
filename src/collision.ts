@@ -25,9 +25,9 @@ export class RectangleCollider implements Collider {
   public position: Shape.Vector = new Shape.Vector();
   public dimension: Shape.Vector = new Shape.Vector(1, 1);
 
-  public hitTest = (obj: Collider): boolean {
+  public hitTest = (obj: Collider): boolean => {
     if (obj.colliderType === ColliderType.Rectangle) {
-      return Collision.RectangleRectangle(this, obj);
+      return Collision.RectangleRectangle(this, <RectangleCollider>obj);
     }
     return false;
   }

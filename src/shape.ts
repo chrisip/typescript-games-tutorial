@@ -226,6 +226,17 @@ export class Vector {
   public dot = (vector: Vector): number => {
     return this.x * vector.x + this.y * vector.y;
   }
+
+  public project = (onto: Vector): Vector => {
+    const proj: Vector = this.duplicate();
+    const d: number = onto.magnitudeSquared;
+    if (d !== 0) {
+      const mult: Vector = onto.duplicate();
+      mult.multiply(proj.dot(onto) / d);
+      return mult;
+    }
+    return onto;
+  }
 }
 
 export class Spaceship implements Shape {

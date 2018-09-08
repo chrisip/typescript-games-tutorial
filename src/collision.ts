@@ -40,6 +40,81 @@ export class LineCollider implements Collider {
   public endPosition: Geometry.Vector = new Geometry.Vector(1, 1);
 }
 
+export class OrientedRectangleCollider implements Collider {
+  public colliderType: ColliderType = ColliderType.OrientedRectangle;
+  public position: Geometry.Vector = new Geometry.Vector();
+  public halfDimension: Geometry.Vector = new Geometry.Vector(1, 1);
+  public rotation: number = 0;
+
+  public axisOverlap = (axis: LineCollider): boolean => {
+    const topEdge: LineCollider = this.getEdge(0);
+    const bottomEdge: LineCollider = this.getEdge(2);
+    const direction: Geometry.Vector = axis.position.duplicate();
+    direction.subtract(axis.endPosition);
+    direction.normalize();
+    const axisRange: Geometry.Range = OrientedRectangleCollider.projectLine(axis, direction);
+    const range0: Geometry.Range = OrientedRectangleCollider.projectLine(topEdge, direction);
+    const range2: Geometry.Range = OrientedRectangleCollider.projectLine(bottomEdge, direction);
+    let projection: Geometry.Range = range0.duplicate();
+    projection = projection.combine(range2);
+    return axisRange.overlap(projection);
+  }
+
+  public static projectLine = (line: LineCollider, onto: Geometry.Vector): Geometry.Range => {
+    const ontoNormalized: Geometry.Vector = onto.duplicate();
+    ontoNormalized.normalize();
+    const range: Geometry.Range = new Geometry.Range();
+    const dot1: number = ontoNormalized.dot(line.position);
+    const dot2: number = ontoNormalized.dot(line.endPosition);
+    if (dot2 > dot1) {
+      range.min = dot1;
+      range.max = dot2;
+    }
+    else {
+      range.min = dot2;
+      range.max = dot1;
+    }
+    return range;
+  }
+
+  private _a: Geometry.Vector = new Geometry.Vector();
+  private _b: Geometry.Vector = new Geometry.Vector();
+
+  public getEdge = (edgeNum: number): LineCollider => {
+    this._a.copy(this.halfDimension);
+    this._b.copy(this.halfDimension);
+    edgeNum %= 4;
+    // Top
+    if (edgeNum === 0) {
+      this._a.x = -this._a.x;
+    }
+    // Right
+    else if (edgeNum === 1) {
+      this._b.y = -this._b.y;
+    }
+    // Bottom
+    else if (edgeNum === 2) {
+      this._a.y = -this._a.y;
+      this._b.x = -this._b.x;
+      this._b.y = -this._b.y;
+    }
+    // Left
+    else if (edgeNum === 3) {
+      this._a.x = -this._a.x;
+      this._a.y = -this._a.y;
+      this._b.x = -this._b.x;
+    }
+    this._a.rotate(this.rotation);
+    this._a.add(this.position);
+    this._b.rotate(this.rotation);
+    this._b.add(this.position);
+    const edge: LineCollider = new LineCollider();
+    edge.position.copy(this._a);
+    edge.endPosition.copy(this._b);
+    return edge;
+  }
+}
+
 export class Collision {
   public static CircleCircle(a: CircleCollider, b: CircleCollider): boolean {
     const tempVector: Geometry.Vector = a.position.duplicate();
@@ -121,5 +196,22 @@ export class Collision {
       return false;
     }
     return true;
+  }
+
+  public static OrientedRectangleOrientedRectangle(a: OrientedRectangleCollider, b: OrientedRectangleCollider): boolean {
+    let edge: LineCollider = a.getEdge(0);
+    if (b.axisOverlap(edge) === false) {
+      return false;
+    }
+    edge = a.getEdge(1);
+    if (b.axisOverlap(edge) === false) {
+      return false;
+    }
+    edge = b.getEdge(0);
+    if (a.axisOverlap(edge) === false) {
+      return false;
+    }
+    edge = b.getEdge(1);
+    return a.axisOverlap(edge);
   }
 }

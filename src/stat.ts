@@ -1,3 +1,4 @@
+import * as Geometry from './geometry';
 import * as Shape from './shape';
 
 export class Reporter {
@@ -26,7 +27,7 @@ export class Reporter {
     this.tableElem.find('tbody').html(rows.join(''));
   }
 
-  public serializeVector = (vector: Shape.Vector) => {
+  public serializeVector = (vector: Geometry.Vector) => {
     return `x: ${vector.x.toFixed(4)}, y: ${vector.y.toFixed(4)}, magnitude: ${vector.magnitude.toFixed(4)}, angle: ${vector.angle.toFixed(4)}`;
   }
 }

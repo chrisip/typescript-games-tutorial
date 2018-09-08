@@ -91,6 +91,13 @@ export class Vector {
   }
 }
 
+export class Line {
+  public position: Vector = new Vector();
+  public endPosition: Vector = new Vector(1, 1);
+
+  constructor() {}
+}
+
 export class Range {
   constructor(
     public min: number = 0,

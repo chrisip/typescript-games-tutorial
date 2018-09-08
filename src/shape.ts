@@ -50,19 +50,12 @@ export class Rectangle implements Shape {
   }
 }
 
-export class Point {
-  constructor(
-      public x: number = 0,
-      public y: number = 0,
-  ) {}
-}
-
 export class Asteroid implements Shape {
   public velocityX: number = 0;
   public velocityY: number = 0;
   public rotation: number = 0;
   public rotationSpeed: number = 0;
-  public pointList: Array<Point> = new Array<Point>();
+  public pointList: Array<Geometry.Point> = new Array<Geometry.Point>();
 
   constructor(
       public x: number = undefined,
@@ -87,37 +80,37 @@ export class Asteroid implements Shape {
     let yRand: number = 0;
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand, yRand + 3 * this.size));
+    this.pointList.push(new Geometry.Point(xRand, yRand + 3 * this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand - 1 * this.size, yRand + 2 * this.size));
+    this.pointList.push(new Geometry.Point(xRand - 1 * this.size, yRand + 2 * this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand - 2 * this.size, yRand + 2 * this.size));
+    this.pointList.push(new Geometry.Point(xRand - 2 * this.size, yRand + 2 * this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand - 3 * this.size, yRand + this.size));
+    this.pointList.push(new Geometry.Point(xRand - 3 * this.size, yRand + this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand - 4 * this.size, yRand));
+    this.pointList.push(new Geometry.Point(xRand - 4 * this.size, yRand));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand - 1 * this.size, yRand - 3 * this.size));
+    this.pointList.push(new Geometry.Point(xRand - 1 * this.size, yRand - 3 * this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand + 2 * this.size, yRand - 4 * this.size));
+    this.pointList.push(new Geometry.Point(xRand + 2 * this.size, yRand - 4 * this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand + 2 * this.size, yRand - 3 * this.size));
+    this.pointList.push(new Geometry.Point(xRand + 2 * this.size, yRand - 3 * this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand + 4 * this.size, yRand - 2 * this.size));
+    this.pointList.push(new Geometry.Point(xRand + 4 * this.size, yRand - 2 * this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     xRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand + 4 * this.size, yRand + this.size));
+    this.pointList.push(new Geometry.Point(xRand + 4 * this.size, yRand + this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
-    this.pointList.push(new Point(xRand + 3 * this.size, yRand + 2 * this.size));
+    this.pointList.push(new Geometry.Point(xRand + 3 * this.size, yRand + 2 * this.size));
     xRand = Math.round(Math.random() * this.size - this.size / 2);
     yRand = Math.round(Math.random() * this.size - this.size / 2);
   }

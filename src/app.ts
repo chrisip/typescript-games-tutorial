@@ -18,6 +18,8 @@ class Game {
   private rectangle2: Collision.RectangleCollider;
   private line1: Collision.LineCollider;
   private line2: Collision.LineCollider;
+  private orientedRectangle1: Collision.OrientedRectangleCollider;
+  private orientedRectangle2: Collision.OrientedRectangleCollider;
 
   constructor() {
     this.keyboardInput = new Input.Keyboard();
@@ -31,6 +33,8 @@ class Game {
     this.rectangle2 = new Collision.RectangleCollider();
     this.line1 = new Collision.LineCollider();
     this.line2 = new Collision.LineCollider();
+    this.orientedRectangle1 = new Collision.OrientedRectangleCollider();
+    this.orientedRectangle2 = new Collision.OrientedRectangleCollider();
     this.keyboardInput.addKeyCodeCallback(Input.Key.Left, this.spaceship.turnLeft);
     this.keyboardInput.addKeyCodeCallback(Input.Key.A, this.spaceship.turnLeft);
     this.keyboardInput.addKeyCodeCallback(Input.Key.Up, this.spaceship.accelerate);
@@ -46,6 +50,7 @@ class Game {
       this.resetCircles();
       this.resetRectangles();
       this.resetLines();
+      this.resetOrientedRectangles();
     });
     this.shapeList.push(this.spaceship);
     this.shapeList.push(new Shape.Asteroid());
@@ -74,6 +79,7 @@ class Game {
     this.drawCircles();
     this.drawRectangles();
     this.drawLines();
+    this.drawOrientedRectangles();
     this.reporter.draw();
   }
 
@@ -174,6 +180,42 @@ class Game {
       this.line2.position.y = Math.floor(Math.random() * Canvas.HEIGHT);
       this.line2.endPosition.x = Math.floor(Math.random() * Canvas.WIDTH);
       this.line2.endPosition.y = Math.floor(Math.random() * Canvas.HEIGHT);
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public drawOrientedRectangle = (orientedRectangle: Collision.OrientedRectangleCollider, color: string): void => {
+      const top: Collision.LineCollider = orientedRectangle.getEdge(0);
+      const right: Collision.LineCollider = orientedRectangle.getEdge(1);
+      const bottom: Collision.LineCollider = orientedRectangle.getEdge(2);
+      const left: Collision.LineCollider = orientedRectangle.getEdge(3);
+      this.drawLine(top.position.x, top.position.y, top.endPosition.x, top.endPosition.y, color, 5);
+      this.drawLine(right.position.x, right.position.y, right.endPosition.x, right.endPosition.y, color, 5);
+      this.drawLine(bottom.position.x, bottom.position.y, bottom.endPosition.x, bottom.endPosition.y, color, 5);
+      this.drawLine(left.position.x, left.position.y, left.endPosition.x, left.endPosition.y, color, 5);
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public drawOrientedRectangles = (): void => {
+      let color = 'blue';
+      if (Collision.Collision.OrientedRectangleOrientedRectangle(this.orientedRectangle1, this.orientedRectangle2)) {
+        color = 'red';
+      }
+      this.drawOrientedRectangle(this.orientedRectangle1, color);
+      this.drawOrientedRectangle(this.orientedRectangle2, color);
+    }
+
+    // TODO: Remove this after finishing testing collisions
+    public resetOrientedRectangles = (): void => {
+      this.orientedRectangle1.position.x = 200 + Math.floor(Math.random() * 800);
+      this.orientedRectangle1.position.y = 200 + Math.floor(Math.random() * 300);
+      this.orientedRectangle1.halfDimension.x = 100 + Math.floor(Math.random() * 100);
+      this.orientedRectangle1.halfDimension.y = 100 + Math.floor(Math.random() * 100);
+      this.orientedRectangle1.rotation = Math.random() * Math.PI * 2;
+      this.orientedRectangle2.position.x = 200 + Math.floor(Math.random() * 800);
+      this.orientedRectangle2.position.y = 200 + Math.floor(Math.random() * 300);
+      this.orientedRectangle2.halfDimension.x = 100 + Math.floor(Math.random() * 100);
+      this.orientedRectangle2.halfDimension.y = 100 + Math.floor(Math.random() * 100);
+      this.orientedRectangle2.rotation = Math.random() * Math.PI * 2;
     }
 }
 

@@ -83,3 +83,61 @@ export class Vector {
     return onto;
   }
 }
+
+export class Range {
+  constructor(
+    public min: number = 0,
+    public max: number = 0,
+  ) {}
+
+  public overlap = (other: Range): boolean => {
+    return other.min <= this.max && this.min <= other.max;
+  }
+
+  public sort = (): void => {
+    if (this.min > this.max) {
+      const temp: number = this.min;
+      this.min = this.max;
+      this.max = temp;
+    }
+  }
+
+  public copy = (range: Range): void => {
+    this.min = range.min;
+    this.max = range.max;
+  }
+
+  public duplicate = (): Range => {
+    return new Range(this.min, this.max);
+  }
+
+  public combine = (range: Range): Range => {
+    const combined: Range = this.duplicate();
+    if (range.min < this.min) {
+      combined.min = range.min;
+    }
+    if (range.max > this.max) {
+      combined.max = range.max;
+    }
+    return combined;
+  }
+
+  public extend = (value: number): void => {
+    if (value > this.max) {
+      this.max = value;
+    }
+    else if (value < this.min) {
+      this.min = value;
+    }
+  }
+
+  public clamp = (value: number): number => {
+    if (value < this.min) {
+      return this.min;
+    }
+    if (value > this.max) {
+      return this.max;
+    }
+    return value;
+  }
+}

@@ -1,3 +1,4 @@
+import * as Geometry from './geometry';
 import * as Shape from './shape';
 
 export enum ColliderType {
@@ -11,19 +12,19 @@ export enum ColliderType {
 
 export interface Collider {
   colliderType: ColliderType,
-  position: Shape.Vector;
+  position: Geometry.Vector;
 }
 
 export class CircleCollider implements Collider {
   public colliderType: ColliderType = ColliderType.Circle;
-  public position: Shape.Vector = new Shape.Vector();
+  public position: Geometry.Vector = new Geometry.Vector();
   public radius: number = 1;
 }
 
 export class RectangleCollider implements Collider {
   public colliderType: ColliderType = ColliderType.Rectangle;
-  public position: Shape.Vector = new Shape.Vector();
-  public dimension: Shape.Vector = new Shape.Vector(1, 1);
+  public position: Geometry.Vector = new Geometry.Vector();
+  public dimension: Geometry.Vector = new Geometry.Vector(1, 1);
 
   public hitTest = (obj: Collider): boolean => {
     if (obj.colliderType === ColliderType.Rectangle) {
@@ -35,13 +36,13 @@ export class RectangleCollider implements Collider {
 
 export class LineCollider implements Collider {
   public colliderType: ColliderType = ColliderType.Line;
-  public position: Shape.Vector = new Shape.Vector();
-  public endPosition: Shape.Vector = new Shape.Vector(1, 1);
+  public position: Geometry.Vector = new Geometry.Vector();
+  public endPosition: Geometry.Vector = new Geometry.Vector(1, 1);
 }
 
 export class Collision {
   public static CircleCircle(a: CircleCollider, b: CircleCollider): boolean {
-    const tempVector: Shape.Vector = a.position.duplicate();
+    const tempVector: Geometry.Vector = a.position.duplicate();
     tempVector.subtract(b.position);
     if (tempVector.magnitudeSquared <= (a.radius + b.radius) * (a.radius + b.radius)) {
       return true;
@@ -89,18 +90,18 @@ export class Collision {
   }
 
   public static LineLine(a: LineCollider, b: LineCollider): boolean {
-    let directionA: Shape.Vector = a.endPosition.duplicate();
-    let directionB: Shape.Vector = b.endPosition.duplicate();
+    let directionA: Geometry.Vector = a.endPosition.duplicate();
+    let directionB: Geometry.Vector = b.endPosition.duplicate();
     directionA.subtract(a.position);
     if (directionA.x === 0 && directionA.y === 0) {
       // This is not a line, this is a point. Don't bother checking
       return false;
     }
-    let distancePoint1: Shape.Vector = a.position.duplicate();
-    let distancePoint2: Shape.Vector = a.position.duplicate();
+    let distancePoint1: Geometry.Vector = a.position.duplicate();
+    let distancePoint2: Geometry.Vector = a.position.duplicate();
     distancePoint1.subtract(b.position);
     distancePoint2.subtract(b.endPosition);
-    let rotatedDirection: Shape.Vector = directionA.duplicate();
+    let rotatedDirection: Geometry.Vector = directionA.duplicate();
     rotatedDirection.rotate90();
     if (rotatedDirection.dot(distancePoint1) * rotatedDirection.dot(distancePoint2) > 0) {
       return false;

@@ -1,4 +1,5 @@
 import * as Canvas from './canvas';
+import * as Geometry from './geometry';
 
 export interface Shape {
   draw(ctx: CanvasRenderingContext2D): void;
@@ -153,101 +154,15 @@ export class Asteroid implements Shape {
   }
 }
 
-export class Vector {
-  constructor(
-      public x: number = 0,
-      public y: number = 0,
-  ) {}
-
-  public get magnitude(): number {
-    return Math.sqrt(this.magnitudeSquared);
-  }
-
-  public get magnitudeSquared(): number {
-    return this.x * this.x + this.y * this.y;
-  }
-
-  public normalize = (): Vector => {
-    const magnitude: number = this.magnitude;
-    this.x /= magnitude;
-    this.y /= magnitude;
-    return this;
-  }
-
-  public zero = (): void => {
-    this.x = 0;
-    this.y = 0;
-  }
-
-  public copy = (vector: Vector): void => {
-    this.x = vector.x;
-    this.y = vector.y;
-  }
-
-  public duplicate = (): Vector => {
-    return new Vector(this.x, this.y);
-  }
-
-  public rotate = (radians: number): void => {
-    const cos: number = Math.cos(radians);
-    const sin: number = Math.sin(radians);
-    const x: number = (cos * this.x) + (sin * this.y);
-    const y: number = (cos * this.y) - (sin * this.x);
-    this.x = x;
-    this.y = y;
-  }
-
-  public rotate90 = (): void => {
-    const x: number = -this.y;
-    const y: number = this.x;
-    this.x = x;
-    this.y = y;
-  }
-
-  public get angle(): number {
-    return Math.atan2(this.y, this.x);
-  }
-
-  public multiply = (value: number): void => {
-    this.x *= value;
-    this.y *= value;
-  }
-
-  public add = (vector: Vector): void => {
-    this.x += vector.x;
-    this.y += vector.y;
-  }
-
-  public subtract = (vector: Vector): void => {
-    this.x -= vector.x;
-    this.y -= vector.y;
-  }
-
-  public dot = (vector: Vector): number => {
-    return this.x * vector.x + this.y * vector.y;
-  }
-
-  public project = (onto: Vector): Vector => {
-    const proj: Vector = this.duplicate();
-    const d: number = onto.magnitudeSquared;
-    if (d !== 0) {
-      const mult: Vector = onto.duplicate();
-      mult.multiply(proj.dot(onto) / d);
-      return mult;
-    }
-    return onto;
-  }
-}
-
 export class Spaceship implements Shape {
-  public velocity: Vector = new Vector(0, 0);
-  public orientation: Vector = new Vector(1, 0);
+  public velocity: Geometry.Vector = new Geometry.Vector(0, 0);
+  public orientation: Geometry.Vector = new Geometry.Vector(1, 0);
   private _maxSpeed: number = 10;
   public maxSpeedSquared: number = this._maxSpeed * this._maxSpeed;
   public acceleration: number = 0.2;
   public rotation: number = 0;
-  public pointList: Array<Vector> = new Array<Vector>();
-  private _tempPoint: Vector = new Vector(0, 0);
+  public pointList: Array<Geometry.Vector> = new Array<Geometry.Vector>();
+  private _tempPoint: Geometry.Vector = new Geometry.Vector(0, 0);
   public bulletList: Array<Bullet> = new Array<Bullet>();
 
   constructor(
@@ -257,10 +172,10 @@ export class Spaceship implements Shape {
       public color: string = 'white',
       public lineWidth: number = 2,
   ) {
-    this.pointList.push(new Vector(3 * this.size, 0));
-    this.pointList.push(new Vector(-2 * this.size, -2 * this.size));
-    this.pointList.push(new Vector(-1 * this.size, 0));
-    this.pointList.push(new Vector(-2 * this.size, 2 * this.size));
+    this.pointList.push(new Geometry.Vector(3 * this.size, 0));
+    this.pointList.push(new Geometry.Vector(-2 * this.size, -2 * this.size));
+    this.pointList.push(new Geometry.Vector(-1 * this.size, 0));
+    this.pointList.push(new Geometry.Vector(-2 * this.size, 2 * this.size));
   }
 
   get maxSpeed(): number {
@@ -366,7 +281,7 @@ export class Bullet implements Shape {
   public active: boolean = true;
   public lineWidthAnimVal: number = 0;
   public widthUp: boolean = true;
-  public velocity: Vector = new Vector();
+  public velocity: Geometry.Vector = new Geometry.Vector();
   public speed: number = 5;
 
   public constructor(
@@ -377,7 +292,7 @@ export class Bullet implements Shape {
     public lineWidth: number = 5,
   ) {}
 
-  public launch = (orientation: Vector): void => {
+  public launch = (orientation: Geometry.Vector): void => {
     this.velocity.copy(orientation);
     this.velocity.multiply(this.speed);
   }

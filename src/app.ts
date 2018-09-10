@@ -10,6 +10,7 @@ class Game {
   private keyboardInput: Input.Keyboard;
   private shapeList: Array<Shape.Shape>;
   private spaceship: Shape.Spaceship;
+  private asteroidList: Array<Shape.Asteroid>;
   private reporter: Stat.Reporter;
   private collisionTester: Collision.Tester;
 
@@ -17,6 +18,7 @@ class Game {
     this.keyboardInput = new Input.Keyboard();
     this.shapeList = new Array<Shape.Shape>();
     this.spaceship = new Shape.Spaceship(200, 450, 5);
+    this.asteroidList = new Array<Shape.Asteroid>();
     this.reporter = new Stat.Reporter('stats', this.spaceship);
     this.collisionTester = new Collision.Tester();
     this.keyboardInput.addKeyCodeCallback(Input.Key.Left, this.spaceship.turnLeft);
@@ -32,9 +34,11 @@ class Game {
       this.collisionTester.reset();
     });
     this.shapeList.push(this.spaceship);
-    this.shapeList.push(new Shape.Asteroid());
-    this.shapeList.push(new Shape.Asteroid());
-    this.shapeList.push(new Shape.Asteroid());
+    this.asteroidList.push(new Shape.Asteroid(850, 600, 20));
+    this.asteroidList.push(new Shape.Asteroid(150, 100, 20));
+    this.asteroidList.push(new Shape.Asteroid(650, 200, 20));
+    this.asteroidList.push(new Shape.Asteroid(1200, 500, 20));
+    this.asteroidList.push(new Shape.Asteroid(200, 600, 20));
   }
 
   public onLoad = () => {
@@ -54,6 +58,28 @@ class Game {
     this.spaceship.bulletList.forEach(bullet => {
       bullet.draw(this.ctx);
     })
+    this.asteroidList.forEach(asteroid => {
+      // TODO: Instead of checking for active here, check for it in the collision,
+      // since draw already checks for active
+      if (asteroid.active === false) {
+        return;
+      }
+      asteroid.draw(this.ctx);
+      if (this.spaceship.hitTest(asteroid) === true) {
+        this.spaceship.alive = false;
+      }
+      this.spaceship.bulletList.forEach(bullet => {
+        // TODO: Instead of checking for active here, check for it in the collision,
+        // since draw already checks for active
+        if (bullet.active === false) {
+          return;
+        }
+        if (bullet.hitTest(asteroid) === true) {
+          bullet.active = false;
+          asteroid.explode(this.asteroidList);
+        }
+      });
+    });
     this.collisionTester.draw(this.ctx);
     this.reporter.draw();
   }

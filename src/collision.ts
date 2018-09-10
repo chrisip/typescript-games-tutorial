@@ -116,6 +116,188 @@ export class OrientedRectangleCollider implements Collider {
   }
 }
 
+export class PolygonCollider {
+  public position: Geometry.Vector = new Geometry.Vector();
+  public rotation: number = 0;
+  protected pointList: Array<Geometry.Vector> = new Array<Geometry.Vector>();
+  protected finalEdge: Geometry.Line = new Geometry.Line();
+
+  public get pointCount(): number {
+    return this.pointList.length;
+  }
+
+  public get edgeCount(): number {
+    return this.pointCount;
+  }
+
+  public getPoint = (pointNum: number): Geometry.Vector => {
+    return this.pointList[pointNum];
+  }
+
+  public getEdge = (edgeNum: number): Geometry.Line => {
+    let p1: Geometry.Vector;
+    let p2: Geometry.Vector;
+    if (edgeNum < this.edgeCount - 1) {
+      p1 = this.getPoint(edgeNum);
+      p2 = this.getPoint(edgeNum + 1);
+    }
+    else {
+      p1 = this.getPoint(edgeNum);
+      p2 = this.getPoint(0);
+    }
+    if (!p1 || !p2) {
+      return null;
+    }
+    const p1Transform: Geometry.Vector = p1.duplicate();
+    const p2Transform: Geometry.Vector = p2.duplicate();
+    p1Transform.rotate(this.rotation);
+    p1Transform.add(this.position);
+    p2Transform.rotate(this.rotation);
+    p2Transform.add(this.position);
+    const edge: Geometry.Line = new Geometry.Line();
+    edge.position = p1Transform;
+    edge.endPosition = p2Transform;
+    return edge;
+  }
+
+  public static projectLine = (line: Geometry.Line, onto: Geometry.Vector): Geometry.Range => {
+    const ontoNormalized: Geometry.Vector = onto.duplicate();
+    ontoNormalized.normalize();
+    const range: Geometry.Range = new Geometry.Range();
+    const dot1: number = ontoNormalized.dot(line.position);
+    const dot2: number = ontoNormalized.dot(line.endPosition);
+    if (dot2 > dot1) {
+      range.min = dot1;
+      range.max = dot2;
+    }
+    else {
+      range.min = dot2;
+      range.max = dot1;
+    }
+    return range;
+  }
+
+  public axisOverlap = (axis: Geometry.Line, p2: PolygonCollider): boolean => {
+    let edge: Geometry.Line;
+    const direction: Geometry.Vector = axis.position.duplicate();
+    direction.subtract(axis.endPosition);
+    direction.normalize();
+    direction.rotate90();
+    let axisRange: Geometry.Range = new Geometry.Range();
+    let range: Geometry.Range;
+    for (let i: number = 0; i < p2.edgeCount; i++) {
+      edge = p2.getEdge(i);
+      range = PolygonCollider.projectLine(edge, direction);
+      if (i === 0) {
+        axisRange.copy(range);
+      }
+      else {
+        axisRange = axisRange.combine(range);
+      }
+    }
+    let projection: Geometry.Range = new Geometry.Range();
+    for (let i: number = 0; i < this.edgeCount; i++) {
+      edge = this.getEdge(i);
+      range = PolygonCollider.projectLine(edge, direction);
+      if (i === 0) {
+        projection.copy(range);
+      }
+      else {
+        projection = projection.combine(range);
+      }
+    }
+    return axisRange.overlap(projection);
+  }
+
+  public hitTest = (obj: PolygonCollider): boolean => {
+    let edge: Geometry.Line;
+    for (let i: number = 0; i < this.edgeCount; i++) {
+      edge = this.getEdge(i);
+      if (obj.axisOverlap(edge, this) === false) {
+        return false;
+      }
+    }
+    for (let i: number = 0; i < obj.edgeCount; i++) {
+      edge = obj.getEdge(i);
+      if (this.axisOverlap(edge, obj) === false) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static isConvex = (collider: PolygonCollider): boolean => {
+    const pointCount: number = collider.pointCount;
+    if (pointCount < 4) {
+      return true;
+    }
+    const point: Geometry.Vector = new Geometry.Vector();
+    const d1: Geometry.Vector = new Geometry.Vector();
+    const d2: Geometry.Vector = new Geometry.Vector();
+    let d1PointIndex: number = 0;
+    let d2PointIndex: number = 0;
+    let sign: boolean = false;
+    for (let i: number = 0; i < pointCount; i++) {
+      point.copy(collider.getPoint(i));
+      if (i < pointCount - 2) {
+        d1PointIndex = i + 1;
+        d2PointIndex = i + 2;
+      }
+      else if (i < pointCount - 1) {
+        d1PointIndex = i + 1;
+        d2PointIndex = 0;
+      }
+      else {
+        d1PointIndex = 0;
+        d2PointIndex = 1;
+      }
+      d1.copy(collider.getPoint(d1PointIndex));
+      d2.copy(collider.getPoint(d2PointIndex));
+      d2.subtract(d1);
+      d1.subtract(point);
+      d2.rotate90();
+      const dot: number = d1.dot(d2);
+      if (i === 0) {
+        sign = dot > 0;
+      }
+      else if (sign !== (dot > 0)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public findClosePointNum = (point: Geometry.Vector): number => {
+    let closeDistSquared: number = 99999999;
+    let tempVector: Geometry.Vector;
+    const distVector: Geometry.Vector = new Geometry.Vector();
+    let closePointNum = -1;
+    for (let i: number = 0; i < this.pointCount; i++) {
+      tempVector = this.pointList[i];
+      distVector.copy(point);
+      distVector.subtract(tempVector);
+      if (distVector.magnitudeSquared < closeDistSquared) {
+        closeDistSquared = distVector.magnitudeSquared;
+        closePointNum = i;
+      }
+    }
+    return closePointNum;
+  }
+
+  public clearPoints = (): void => {
+    this.pointList = new Array<Geometry.Vector>();
+  }
+
+  public addPoint = (point: Geometry.Vector): void => {
+    this.pointList.push(point);
+  }
+
+  public projectEdge = (edgeNum: number, onto: Geometry.Vector): Geometry.Range => {
+    const line: Geometry.Line = this.getEdge(edgeNum);
+    return PolygonCollider.projectLine(line, onto);
+  }
+}
+
 export class Collision {
   public static CircleCircle(a: CircleCollider, b: CircleCollider): boolean {
     const tempVector: Geometry.Vector = a.position.duplicate();

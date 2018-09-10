@@ -22,7 +22,7 @@ export class Reporter {
     rows.push(`<tr><td>maxSpeedSquared</td><td>${this.spaceship.maxSpeedSquared}</td></tr>`);
     rows.push(`<tr><td>acceleration</td><td>${this.spaceship.acceleration}</td></tr>`);
     rows.push(`<tr><td>rotation</td><td>${this.spaceship.rotation.toFixed(4)}</td></tr>`);
-    const pointListSerialized = this.spaceship.pointList.map((vector, i) => `${i}) ${this.serializeVector(vector)}`).join(' ');
+    const pointListSerialized = this.spaceship.drawPointList.map((vector, i) => `${i}) ${this.serializeVector(vector)}`).join(' ');
     rows.push(`<tr><td>pointList</td><td>${pointListSerialized}</td></tr>`);
     this.tableElem.find('tbody').html(rows.join(''));
   }
